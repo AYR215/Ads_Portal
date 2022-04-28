@@ -1,0 +1,19 @@
+{% extends 'flatpages/default.html' %}
+
+{% block title %}
+ADVERTISEMENT DETAILS
+{% endblock title %}
+
+{% block content %}
+   <h2> {{ ad.headline }} </h2>
+    <p> Published: {{ ad.ad_time_in|date:"d M Y"}}{{ad.ad_time_in|time:"H:i"}} </p>
+    <p> {{ ad.text|safe }} </p>
+
+<a href="{% url 'response' ads.pk %}"> RESPONSE </a>
+<!--при помощи блока if скрываем возможность изменения/удаления объявления для юзеров кроме автора-->
+{% if ad.author.identity == request.user %}
+    <a href="{% url 'ads_edit' ads.pk %}"> EDIT </a>
+    <a href="{% url 'ads_delete' ads.pk %}">DELETE </a>
+{% endif %}
+
+{% endblock content %}

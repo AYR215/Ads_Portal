@@ -1,0 +1,49 @@
+{% extends 'flatpages/default.html' %}
+
+{% block title %}
+PERSONAL PAGE
+{% endblock title %}
+
+{% block content %}
+
+<h1>Welcome to your personal page, {{request.user.username}}!</h1>
+<hr>
+
+<h2>Would you like to publish your ads on the main page?</h2>
+<ul>
+    <li>Start with choosing your name as an author:
+        <button> <a href="../ads/author/">START!</a> </button>
+    </li>
+    <li>If you are an author already:
+        <button><a href="../ads/create/">ADD YOUR AD!</a> </button>
+    </li>
+</ul>
+<div>
+    <h2>Here you can view all the responses to your ads:</h2>
+       <form method="GET">
+            {{ filter.form }}
+            <input type="submit" value="Search">
+        </form>
+        {% if responselist %}
+            {% for response in responselist %}
+            {% if response.resp_post.author.identity == request.user %}
+                <p> From: {{ response.from_user}} </p>
+                <p> When: {{ response.resp_time_in|date:"d M Y" }} </p>
+                <p> To your ad: {{ response.resp_post}} </p>
+                <p> {{ comment.text }} </p>
+                <button> <a href="{% url 'response_delete' response.pk %}">DELETE</a> </button>
+                <button> <a href="{% url 'response_accept' response.pk %}">ACCEPT</a> </button>
+                <hr>
+            {% endif %}
+            {% endfor %}
+        {% else %}
+        <h2>No responses!</h2>
+        {% endif %}
+
+</div>
+<hr>
+
+<button> <a href="logout/">Log out</a> </button>
+
+
+{% endblock content %}
