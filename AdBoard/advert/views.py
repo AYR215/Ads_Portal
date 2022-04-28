@@ -14,7 +14,7 @@ from random import randint
 
 class AdsList(ListView):
     model = Ad
-    template_name = 'flatpages/ads.html'
+    template_name = 'ads.html'
     context_object_name = 'adslist'
     queryset = Ad.objects.order_by('-id')
     paginate_by = 5
@@ -22,17 +22,17 @@ class AdsList(ListView):
 
 class AdsDetail(DetailView):
     model = Ad
-    template_name = 'flatpages/adsdetail.html'
+    template_name = 'adsdetail.html'
     context_object_name = 'ads'
 
 
 class AdsCreateView(LoginRequiredMixin, CreateView):
-    template_name = 'flatpages/ads_add.html'
+    template_name = 'ads_add.html'
     form_class = AdsForm
 
 
 class AdsUpdateView(LoginRequiredMixin, UpdateView):
-    template_name = 'flatpages/ads_edit.html'
+    template_name = 'ads_edit.html'
     form_class = AdsForm
 
     def get_object(self, **kwargs):
@@ -41,20 +41,20 @@ class AdsUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class AdsDeleteView(LoginRequiredMixin, DeleteView):
-    template_name = 'flatpages/ads_delete.html'
+    template_name = 'ads_delete.html'
     queryset = Ad.objects.all()
     success_url = '/ads/'
 
 
 class AuthorCreateView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
-        return render(request, 'flatpages/author_add.html')
+        return render(request, 'author_add.html')
 
     def post(self, request, *args, **kwargs):
-        identity = request.user
+        authoruser = request.user
         name = request.POST['name']
         if not Author.objects.filter(name=name):  # проверка уникальности имени
-            newauthor = Author(name=name, identity=identity)
+            newauthor = Author(name=name, authorUser=authoruser)
             newauthor.save()
         else:
             raise ValueError('Name already used')
@@ -63,7 +63,7 @@ class AuthorCreateView(LoginRequiredMixin, View):
 
 class ResponseList(LoginRequiredMixin, ListView):
     model = Response
-    template_name = 'flatpages/personal.html'
+    template_name = 'personal.html'
     context_object_name = 'responselist'
     queryset = Response.objects.order_by('-id')
     paginate_by = 10
@@ -81,13 +81,13 @@ class ResponseList(LoginRequiredMixin, ListView):
 
 
 class ResponseCreateView(LoginRequiredMixin, CreateView):
-    template_name = 'flatpages/response_add.html'
+    template_name = 'response_add.html'
     form_class = ResponseForm
     success_url = '/ads/'
 
 
 class ResponseDeleteView(LoginRequiredMixin, DeleteView):
-    template_name = 'flatpages/response_delete.html'
+    template_name = 'response_delete.html'
     queryset = Response.objects.all()
     success_url = '/ads/'
 
@@ -97,4 +97,4 @@ class ResponseAcceptView(View):
         pk = self.kwargs.get('pk')
         response = Response.objects.get(pk=pk)
         response.accept_response()
-        return render(request, 'flatpages/response_accept.html', {})
+        return render(request, 'response_accept.html', {})
